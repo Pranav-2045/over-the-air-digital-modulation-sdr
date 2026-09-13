@@ -1,0 +1,1047 @@
+options:
+  parameters:
+    author: pranav
+    catch_exceptions: 'True'
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: QPSK Repeating Text Receiver with PRBS Descrambler, CRC32 & GUI Display
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rx_qpsk_repeating_text
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: QPSK Repeating Text Receiver
+    window_size: 2000,2000
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 16.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: Alpha
+  id: variable
+  parameters:
+    comment: ''
+    value: '0.35'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 4.0]
+    rotation: 0
+    state: enabled
+- name: center_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: '2850000000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 84.0]
+    rotation: 0
+    state: enabled
+- name: costas_loop_bw
+  id: variable_qtgui_range
+  parameters:
+    comment: may need moving the slider sometimes
+    gui_hint: ''
+    label: Costas Loop BW
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0.001'
+    step: '0.001'
+    stop: '0.2'
+    value: '0.08'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 88.0]
+    rotation: 0
+    state: enabled
+- name: nfilts
+  id: variable
+  parameters:
+    comment: ''
+    value: '32'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 4.0]
+    rotation: 0
+    state: enabled
+- name: qpsk_const
+  id: variable_constellation
+  parameters:
+    comment: ''
+    const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
+    dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
+    precision: '8'
+    rot_sym: '4'
+    soft_dec_lut: None
+    sym_map: '[0, 1, 3, 2]'
+    type: calcdist
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 4.0]
+    rotation: 0
+    state: 'true'
+- name: rrc_taps
+  id: variable
+  parameters:
+    comment: ''
+    value: firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), Alpha, 11*sps*nfilts)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 4.0]
+    rotation: 0
+    state: enabled
+- name: rx_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: RX Gain
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '76'
+    value: '36'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [496, 96.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '1000000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 4.0]
+    rotation: 0
+    state: enabled
+- name: sps
+  id: variable
+  parameters:
+    comment: ''
+    value: '4'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [328, 4.0]
+    rotation: 0
+    state: enabled
+- name: timing_loop_bw
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Timing Loop BW
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0.001'
+    step: '0.001'
+    stop: '0.1'
+    value: '0.01'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [336, 96.0]
+    rotation: 0
+    state: enabled
+- name: analog_agc_xx_0
+  id: analog_agc_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    gain: '1.0'
+    max_gain: '65536'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: 1e-3
+    reference: '1.0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 276.0]
+    rotation: 0
+    state: enabled
+- name: digital_constellation_decoder_cb_0
+  id: digital_constellation_decoder_cb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: qpsk_const
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [928, 264.0]
+    rotation: 0
+    state: enabled
+- name: digital_costas_loop_cc_0
+  id: digital_costas_loop_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    order: '4'
+    use_snr: 'False'
+    w: costas_loop_bw
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [904, 368.0]
+    rotation: 0
+    state: enabled
+- name: digital_diff_decoder_bb_0
+  id: digital_diff_decoder_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    coding: digital.DIFF_DIFFERENTIAL
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    modulus: '4'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1152, 196.0]
+    rotation: 0
+    state: enabled
+- name: digital_fll_band_edge_cc_0
+  id: digital_fll_band_edge_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filter_size: '128'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rolloff: Alpha
+    samps_per_sym: sps
+    type: cc
+    w: '0.04'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 400.0]
+    rotation: 0
+    state: enabled
+- name: digital_map_bb_0
+  id: digital_map_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    map: '[0, 1, 3, 2]'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1192, 304.0]
+    rotation: 0
+    state: enabled
+- name: digital_symbol_sync_xx_0
+  id: digital_symbol_sync_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: digital.constellation_qpsk().base()
+    damping: '1.0'
+    loop_bw: timing_loop_bw
+    max_dev: '1.5'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nfilters: nfilts
+    osps: '1'
+    pfb_mf_taps: rrc_taps
+    resamp_type: digital.IR_PFB_MF
+    sps: sps
+    ted_gain: '1.0'
+    ted_type: digital.TED_GARDNER
+    type: cc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [472, 272.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "import numpy as np\nfrom gnuradio import gr\nimport struct\nimport\
+      \ zlib\nimport time\nimport os\nimport inspect\nfrom collections import deque\n\
+      \n# Synchronous PRBS whitening keystream matching transmitter\n_rng = np.random.RandomState(42)\n\
+      WHITENING_KEY = _rng.randint(0, 256, size=2048, dtype=np.uint8)\n\nclass blk(gr.sync_block):\n\
+      \    \"\"\"Robust QPSK Text Packet Deframer, Descrambler, CRC32 Verifier & Qt\
+      \ GUI Display\"\"\"\n    def __init__(self, log_to_file=True):\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='Text Packet Deframer & GUI',\n       \
+      \     in_sig=[np.uint8],\n            out_sig=[]\n        )\n        self.log_to_file\
+      \ = bool(log_to_file)\n        \n        # 32-symbol preamble matching transmitter\n\
+      \        self.preamble = np.array([3, 3, 3, 3, 3, 0, 0, 3, 3, 0, 3, 0, 3, 3,\
+      \ 3, 3,\n                                  3, 3, 0, 0, 3, 3, 0, 3, 0, 3, 3,\
+      \ 0, 0, 3, 0, 3], dtype=np.uint8)\n        \n        self.buffer = np.array([],\
+      \ dtype=np.uint8)\n        \n        # Statistics\n        self.total_packets\
+      \ = 0\n        self.crc_errors = 0\n        self.last_seq = -1\n        self.last_text\
+      \ = \"\"\n        self.recent_messages = deque(maxlen=50)\n        \n      \
+      \  # File Logging\n        dir_path = os.path.dirname(os.path.abspath(__file__))\
+      \ if '__file__' in locals() else '.'\n        self.log_path = os.path.join(dir_path,\
+      \ 'rx_text_log.txt')\n        self.log_file = None\n        if self.log_to_file:\n\
+      \            try:\n                self.log_file = open(self.log_path, 'a',\
+      \ encoding='utf-8')\n                self.log_file.write(f\"\\n=== QPSK Text\
+      \ Receiver Started: {time.strftime('%Y-%m-%d %H:%M:%S')} ===\\n\")\n       \
+      \         self.log_file.flush()\n            except Exception as e:\n      \
+      \          print(f\"[RX Deframer] File log init warning: {e}\")\n          \
+      \      \n        # Qt GUI Widget Injection\n        self.top_block = None\n\
+      \        self.status_label = None\n        self.text_display = None\n      \
+      \  self.gui_timer = None\n        \n        for frame_info in inspect.stack():\n\
+      \            frame = frame_info.frame\n            if 'self' in frame.f_locals:\n\
+      \                val = frame.f_locals['self']\n                if hasattr(val,\
+      \ 'top_grid_layout'):\n                    self.top_block = val\n          \
+      \          break\n                    \n        if self.top_block:\n       \
+      \     try:\n                from PyQt5.QtWidgets import QLabel, QTextEdit, QVBoxLayout,\
+      \ QWidget\n                from PyQt5.QtCore import QTimer\n               \
+      \ \n                self.gui_container = QWidget()\n                layout =\
+      \ QVBoxLayout(self.gui_container)\n                layout.setContentsMargins(4,\
+      \ 4, 4, 4)\n                layout.setSpacing(4)\n                \n       \
+      \         self.status_label = QLabel(\"Waiting for QPSK signal... [Packets:\
+      \ 0 | CRC Errors: 0]\")\n                self.status_label.setStyleSheet(\n\
+      \                    \"background-color: #1e1e2e; color: #a6e3a1; font-size:\
+      \ 14px; font-weight: bold; padding: 6px; border-radius: 4px;\"\n           \
+      \     )\n                layout.addWidget(self.status_label)\n             \
+      \   \n                self.text_display = QTextEdit()\n                self.text_display.setReadOnly(True)\n\
+      \                self.text_display.setStyleSheet(\n                    \"background-color:\
+      \ #181825; color: #cdd6f4; font-family: 'Consolas', monospace; font-size: 12px;\
+      \ border: 1px solid #313244; border-radius: 4px;\"\n                )\n    \
+      \            self.text_display.setMinimumHeight(180)\n                layout.addWidget(self.text_display)\n\
+      \                \n                # Add to GNU Radio QT GUI layout (top row)\n\
+      \                self.top_block.top_grid_layout.addWidget(self.gui_container,\
+      \ 0, 0, 1, 2)\n                \n                self.gui_timer = QTimer()\n\
+      \                self.gui_timer.setInterval(150)\n                self.gui_timer.timeout.connect(self.update_gui)\n\
+      \                self.gui_timer.start()\n                print(f\"[RX Deframer]\
+      \ GUI initialized. Log file: {self.log_path}\")\n            except Exception\
+      \ as e:\n                print(f\"[RX Deframer] GUI setup warning: {e}\")\n\n\
+      \    def symbols_to_bytes(self, syms):\n        \"\"\"Convert array of 2-bit\
+      \ symbols to bytes (4 symbols per byte)\"\"\"\n        n_bytes = len(syms) //\
+      \ 4\n        byte_arr = bytearray(n_bytes)\n        for i in range(n_bytes):\n\
+      \            s0 = int(syms[4*i])\n            s1 = int(syms[4*i + 1])\n    \
+      \        s2 = int(syms[4*i + 2])\n            s3 = int(syms[4*i + 3])\n    \
+      \        byte_arr[i] = (s0 << 6) | (s1 << 4) | (s2 << 2) | s3\n        return\
+      \ bytes(byte_arr)\n\n    def update_gui(self):\n        if not self.status_label\
+      \ or not self.text_display:\n            return\n            \n        total\
+      \ = self.total_packets\n        errs = self.crc_errors\n        total_attempts\
+      \ = total + errs\n        success_pct = (total / total_attempts * 100.0) if\
+      \ total_attempts > 0 else 100.0\n        \n        status_text = (\n       \
+      \     f\"Received Packets: {total:,}  |  CRC Errors: {errs:,}  |  \"\n     \
+      \       f\"Pass Rate: {success_pct:.1f}%  |  Last Seq: #{self.last_seq}\"\n\
+      \        )\n        self.status_label.setText(status_text)\n        \n     \
+      \   lines = []\n        while self.recent_messages:\n            lines.append(self.recent_messages.popleft())\n\
+      \            \n        if lines:\n            self.text_display.append(\"\\\
+      n\".join(lines))\n            sb = self.text_display.verticalScrollBar()\n \
+      \           sb.setValue(sb.maximum())\n\n    def work(self, input_items, output_items):\n\
+      \        in_syms = input_items[0]\n        if len(in_syms) == 0:\n         \
+      \   return 0\n            \n        data = np.concatenate([self.buffer, in_syms])\n\
+      \        idx = 0\n        n_data = len(data)\n        \n        # Preamble (32)\
+      \ + Header (28) = 60 symbols minimum\n        while idx + 60 <= n_data:\n  \
+      \          window = data[idx : idx + 32]\n            mismatches = int(np.sum(window\
+      \ != self.preamble))\n            \n            if mismatches <= 2:\n      \
+      \          # Descramble 7 header bytes\n                header_raw = bytearray(self.symbols_to_bytes(data[idx\
+      \ + 32 : idx + 60]))\n                for i in range(7):\n                 \
+      \   header_raw[i] ^= int(WHITENING_KEY[i % len(WHITENING_KEY)])\n          \
+      \      \n                magic, pkt_type, seq_num, payload_len = struct.unpack('>H\
+      \ B H H', bytes(header_raw))\n                \n                if magic !=\
+      \ 0x5AA5 or payload_len > 512:\n                    idx += 1\n             \
+      \       continue\n                    \n                total_pkt_syms = 32\
+      \ + 28 + (4 * payload_len) + 16\n                if idx + total_pkt_syms > n_data:\n\
+      \                    break\n                    \n                # Descramble\
+      \ payload bytes\n                payload_raw = bytearray(self.symbols_to_bytes(data[idx\
+      \ + 60 : idx + 60 + 4 * payload_len]))\n                for j in range(len(payload_raw)):\n\
+      \                    payload_raw[j] ^= int(WHITENING_KEY[(7 + j) % len(WHITENING_KEY)])\n\
+      \                \n                # Descramble CRC bytes\n                crc_raw\
+      \ = bytearray(self.symbols_to_bytes(data[idx + 60 + 4 * payload_len : idx +\
+      \ total_pkt_syms]))\n                for k in range(4):\n                  \
+      \  crc_raw[k] ^= int(WHITENING_KEY[(7 + payload_len + k) % len(WHITENING_KEY)])\n\
+      \                \n                rx_crc = struct.unpack('>I', bytes(crc_raw))[0]\n\
+      \                calc_crc = zlib.crc32(bytes(header_raw) + bytes(payload_raw))\
+      \ & 0xFFFFFFFF\n                \n                if calc_crc == rx_crc:\n \
+      \                   self.total_packets += 1\n                    self.last_seq\
+      \ = seq_num\n                    msg = bytes(payload_raw).decode('utf-8', errors='replace')\n\
+      \                    self.last_text = msg\n                    \n          \
+      \          log_entry = f\"[{time.strftime('%H:%M:%S')}] [Pkt #{seq_num:05d}]\
+      \ {msg}\"\n                    self.recent_messages.append(log_entry)\n    \
+      \                \n                    if self.total_packets % 25 == 0 or self.total_packets\
+      \ <= 5:\n                        print(f\"[RX QPSK] Received Pkt #{seq_num:05d}:\
+      \ {msg} (CRC OK)\")\n                        \n                    if self.log_file:\n\
+      \                        try:\n                            self.log_file.write(f\"\
+      {log_entry}\\n\")\n                            if self.total_packets % 10 ==\
+      \ 0:\n                                self.log_file.flush()\n              \
+      \          except Exception:\n                            pass\n           \
+      \                 \n                    idx += total_pkt_syms\n            \
+      \    else:\n                    self.crc_errors += 1\n                    if\
+      \ self.crc_errors % 25 == 0 or self.crc_errors <= 5:\n                     \
+      \   print(f\"[RX QPSK WARNING] CRC Error on Pkt #{seq_num} (calc={hex(calc_crc)},\
+      \ rx={hex(rx_crc)})\")\n                    idx += total_pkt_syms\n        \
+      \    else:\n                idx += 1\n                \n        if idx < n_data:\n\
+      \            self.buffer = data[idx:]\n        else:\n            self.buffer\
+      \ = np.array([], dtype=np.uint8)\n            \n        if len(self.buffer)\
+      \ > 10000:\n            self.buffer = self.buffer[-2000:]\n            \n  \
+      \      return len(in_syms)\n\n    def stop(self):\n        if hasattr(self,\
+      \ 'gui_timer') and self.gui_timer:\n            self.gui_timer.stop()\n    \
+      \    if hasattr(self, 'log_file') and self.log_file:\n            try:\n   \
+      \             self.log_file.flush()\n                self.log_file.close()\n\
+      \            except Exception:\n                pass\n        return True\n"
+    affinity: ''
+    alias: ''
+    comment: QPSK Text Deframer & Qt GUI Display
+    log_to_file: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Text Packet Deframer & GUI', 'blk', [('log_to_file', 'True')], [('0',
+      'byte', 1)], [], 'Robust QPSK Text Packet Deframer, Descrambler, CRC32 Verifier
+      & Qt GUI Display', ['log_to_file'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1392, 320.0]
+    rotation: 0
+    state: enabled
+- name: note_0
+  id: note
+  parameters:
+    alias: ''
+    comment: "======================================================================\n\
+      \           QPSK RECEIVER SYNCHRONIZATION TUNING GUIDE\n======================================================================\n\
+      \n1. COSTAS LOOP BANDWIDTH (costas_loop_bw):\n   - What it does:\n     Tracks\
+      \ carrier phase and eliminates fine carrier frequency offset\n     between the\
+      \ transmitter and receiver oscillators.\n   - How to adjust:\n     * HIGHER\
+      \ (0.06 - 0.10):\n       Widens the frequency acquisition (pull-in) range. Crucial\
+      \ when\n       operating at high RF frequencies (e.g., 2.85 GHz) where USRP\
+      \ TCXO\n       crystal offsets are 5 kHz - 12 kHz.\n       * Symptom if too\
+      \ low (< 0.04): Constellation fails to lock and\n         spins in 8 clusters\
+      \ (dynamic phase slips across 45-deg boundaries).\n       * Symptom if too high\
+      \ (> 0.15): Constellation clusters smear/blur\n         due to excessive phase\
+      \ noise tracking.\n     * Recommendation:\n       Keep default at 0.07 - 0.08\
+      \ for instant hardware capture.\n\n----------------------------------------------------------------------\n\
+      \n2. TIMING LOOP BANDWIDTH (timing_loop_bw):\n   - What it does:\n     Symbol\
+      \ clock synchronization (Gardner TED in Symbol Sync block).\n     Finds the\
+      \ exact optimal time instant to sample each symbol at 1 SPS.\n   - How to adjust:\n\
+      \     * HIGHER (0.02 - 0.05):\n       Faster clock lock; tracks sudden sample-rate\
+      \ clock drift.\n     * LOWER (0.005 - 0.015):\n       Minimizes timing jitter\
+      \ and inter-symbol interference (ISI).\n     * Recommendation:\n       Keep\
+      \ at 0.01. Only increase if constellation points spread radially\n       along\
+      \ symbol transition trajectories.\n\n----------------------------------------------------------------------\n\
+      \n3. FLL BAND-EDGE BANDWIDTH (w in digital_fll_band_edge_cc):\n   - What it\
+      \ does:\n     Performs coarse carrier frequency offset estimation by balancing\n\
+      \     energy at the upper and lower Nyquist band edges (+/- (1+Alpha)*Rs/2).\n\
+      \   - How to adjust:\n     * Set to 0.03 - 0.05 to rapidly pull in large initial\
+      \ crystal offsets\n       before the signal reaches the Costas loop.\n     *\
+      \ If set too low (0.01), convergence is sluggish, forcing the Costas\n     \
+      \  loop to do all the heavy lifting.\n======================================================================"
+    note: receiver tuning guide
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 504.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'False'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1200, 420.0]
+    rotation: 0
+    state: enabled
+- name: uhd_usrp_source_0
+  id: uhd_usrp_source
+  parameters:
+    affinity: ''
+    alias: ''
+    ant0: '"RX2"'
+    ant1: '"RX2"'
+    ant10: '"RX2"'
+    ant11: '"RX2"'
+    ant12: '"RX2"'
+    ant13: '"RX2"'
+    ant14: '"RX2"'
+    ant15: '"RX2"'
+    ant16: '"RX2"'
+    ant17: '"RX2"'
+    ant18: '"RX2"'
+    ant19: '"RX2"'
+    ant2: '"RX2"'
+    ant20: '"RX2"'
+    ant21: '"RX2"'
+    ant22: '"RX2"'
+    ant23: '"RX2"'
+    ant24: '"RX2"'
+    ant25: '"RX2"'
+    ant26: '"RX2"'
+    ant27: '"RX2"'
+    ant28: '"RX2"'
+    ant29: '"RX2"'
+    ant3: '"RX2"'
+    ant30: '"RX2"'
+    ant31: '"RX2"'
+    ant4: '"RX2"'
+    ant5: '"RX2"'
+    ant6: '"RX2"'
+    ant7: '"RX2"'
+    ant8: '"RX2"'
+    ant9: '"RX2"'
+    bw0: samp_rate
+    bw1: '0'
+    bw10: '0'
+    bw11: '0'
+    bw12: '0'
+    bw13: '0'
+    bw14: '0'
+    bw15: '0'
+    bw16: '0'
+    bw17: '0'
+    bw18: '0'
+    bw19: '0'
+    bw2: '0'
+    bw20: '0'
+    bw21: '0'
+    bw22: '0'
+    bw23: '0'
+    bw24: '0'
+    bw25: '0'
+    bw26: '0'
+    bw27: '0'
+    bw28: '0'
+    bw29: '0'
+    bw3: '0'
+    bw30: '0'
+    bw31: '0'
+    bw4: '0'
+    bw5: '0'
+    bw6: '0'
+    bw7: '0'
+    bw8: '0'
+    bw9: '0'
+    center_freq0: uhd.tune_request(center_freq, samp_rate/2)
+    center_freq1: '0'
+    center_freq10: '0'
+    center_freq11: '0'
+    center_freq12: '0'
+    center_freq13: '0'
+    center_freq14: '0'
+    center_freq15: '0'
+    center_freq16: '0'
+    center_freq17: '0'
+    center_freq18: '0'
+    center_freq19: '0'
+    center_freq2: '0'
+    center_freq20: '0'
+    center_freq21: '0'
+    center_freq22: '0'
+    center_freq23: '0'
+    center_freq24: '0'
+    center_freq25: '0'
+    center_freq26: '0'
+    center_freq27: '0'
+    center_freq28: '0'
+    center_freq29: '0'
+    center_freq3: '0'
+    center_freq30: '0'
+    center_freq31: '0'
+    center_freq4: '0'
+    center_freq5: '0'
+    center_freq6: '0'
+    center_freq7: '0'
+    center_freq8: '0'
+    center_freq9: '0'
+    clock_rate: 0e0
+    clock_source0: ''
+    clock_source1: ''
+    clock_source2: ''
+    clock_source3: ''
+    clock_source4: ''
+    clock_source5: ''
+    clock_source6: ''
+    clock_source7: ''
+    comment: ''
+    dc_offs0: 0+0j
+    dc_offs1: 0+0j
+    dc_offs10: 0+0j
+    dc_offs11: 0+0j
+    dc_offs12: 0+0j
+    dc_offs13: 0+0j
+    dc_offs14: 0+0j
+    dc_offs15: 0+0j
+    dc_offs16: 0+0j
+    dc_offs17: 0+0j
+    dc_offs18: 0+0j
+    dc_offs19: 0+0j
+    dc_offs2: 0+0j
+    dc_offs20: 0+0j
+    dc_offs21: 0+0j
+    dc_offs22: 0+0j
+    dc_offs23: 0+0j
+    dc_offs24: 0+0j
+    dc_offs25: 0+0j
+    dc_offs26: 0+0j
+    dc_offs27: 0+0j
+    dc_offs28: 0+0j
+    dc_offs29: 0+0j
+    dc_offs3: 0+0j
+    dc_offs30: 0+0j
+    dc_offs31: 0+0j
+    dc_offs4: 0+0j
+    dc_offs5: 0+0j
+    dc_offs6: 0+0j
+    dc_offs7: 0+0j
+    dc_offs8: 0+0j
+    dc_offs9: 0+0j
+    dc_offs_enb0: default
+    dc_offs_enb1: default
+    dc_offs_enb10: default
+    dc_offs_enb11: default
+    dc_offs_enb12: default
+    dc_offs_enb13: default
+    dc_offs_enb14: default
+    dc_offs_enb15: default
+    dc_offs_enb16: default
+    dc_offs_enb17: default
+    dc_offs_enb18: default
+    dc_offs_enb19: default
+    dc_offs_enb2: default
+    dc_offs_enb20: default
+    dc_offs_enb21: default
+    dc_offs_enb22: default
+    dc_offs_enb23: default
+    dc_offs_enb24: default
+    dc_offs_enb25: default
+    dc_offs_enb26: default
+    dc_offs_enb27: default
+    dc_offs_enb28: default
+    dc_offs_enb29: default
+    dc_offs_enb3: default
+    dc_offs_enb30: default
+    dc_offs_enb31: default
+    dc_offs_enb4: default
+    dc_offs_enb5: default
+    dc_offs_enb6: default
+    dc_offs_enb7: default
+    dc_offs_enb8: default
+    dc_offs_enb9: default
+    dev_addr: '""'
+    dev_args: ''
+    gain0: rx_gain
+    gain1: '0'
+    gain10: '0'
+    gain11: '0'
+    gain12: '0'
+    gain13: '0'
+    gain14: '0'
+    gain15: '0'
+    gain16: '0'
+    gain17: '0'
+    gain18: '0'
+    gain19: '0'
+    gain2: '0'
+    gain20: '0'
+    gain21: '0'
+    gain22: '0'
+    gain23: '0'
+    gain24: '0'
+    gain25: '0'
+    gain26: '0'
+    gain27: '0'
+    gain28: '0'
+    gain29: '0'
+    gain3: '0'
+    gain30: '0'
+    gain31: '0'
+    gain4: '0'
+    gain5: '0'
+    gain6: '0'
+    gain7: '0'
+    gain8: '0'
+    gain9: '0'
+    gain_type0: default
+    gain_type1: default
+    gain_type10: default
+    gain_type11: default
+    gain_type12: default
+    gain_type13: default
+    gain_type14: default
+    gain_type15: default
+    gain_type16: default
+    gain_type17: default
+    gain_type18: default
+    gain_type19: default
+    gain_type2: default
+    gain_type20: default
+    gain_type21: default
+    gain_type22: default
+    gain_type23: default
+    gain_type24: default
+    gain_type25: default
+    gain_type26: default
+    gain_type27: default
+    gain_type28: default
+    gain_type29: default
+    gain_type3: default
+    gain_type30: default
+    gain_type31: default
+    gain_type4: default
+    gain_type5: default
+    gain_type6: default
+    gain_type7: default
+    gain_type8: default
+    gain_type9: default
+    iq_imbal0: 0+0j
+    iq_imbal1: 0+0j
+    iq_imbal10: 0+0j
+    iq_imbal11: 0+0j
+    iq_imbal12: 0+0j
+    iq_imbal13: 0+0j
+    iq_imbal14: 0+0j
+    iq_imbal15: 0+0j
+    iq_imbal16: 0+0j
+    iq_imbal17: 0+0j
+    iq_imbal18: 0+0j
+    iq_imbal19: 0+0j
+    iq_imbal2: 0+0j
+    iq_imbal20: 0+0j
+    iq_imbal21: 0+0j
+    iq_imbal22: 0+0j
+    iq_imbal23: 0+0j
+    iq_imbal24: 0+0j
+    iq_imbal25: 0+0j
+    iq_imbal26: 0+0j
+    iq_imbal27: 0+0j
+    iq_imbal28: 0+0j
+    iq_imbal29: 0+0j
+    iq_imbal3: 0+0j
+    iq_imbal30: 0+0j
+    iq_imbal31: 0+0j
+    iq_imbal4: 0+0j
+    iq_imbal5: 0+0j
+    iq_imbal6: 0+0j
+    iq_imbal7: 0+0j
+    iq_imbal8: 0+0j
+    iq_imbal9: 0+0j
+    iq_imbal_enb0: default
+    iq_imbal_enb1: default
+    iq_imbal_enb10: default
+    iq_imbal_enb11: default
+    iq_imbal_enb12: default
+    iq_imbal_enb13: default
+    iq_imbal_enb14: default
+    iq_imbal_enb15: default
+    iq_imbal_enb16: default
+    iq_imbal_enb17: default
+    iq_imbal_enb18: default
+    iq_imbal_enb19: default
+    iq_imbal_enb2: default
+    iq_imbal_enb20: default
+    iq_imbal_enb21: default
+    iq_imbal_enb22: default
+    iq_imbal_enb23: default
+    iq_imbal_enb24: default
+    iq_imbal_enb25: default
+    iq_imbal_enb26: default
+    iq_imbal_enb27: default
+    iq_imbal_enb28: default
+    iq_imbal_enb29: default
+    iq_imbal_enb3: default
+    iq_imbal_enb30: default
+    iq_imbal_enb31: default
+    iq_imbal_enb4: default
+    iq_imbal_enb5: default
+    iq_imbal_enb6: default
+    iq_imbal_enb7: default
+    iq_imbal_enb8: default
+    iq_imbal_enb9: default
+    lo_export0: 'False'
+    lo_export1: 'False'
+    lo_export10: 'False'
+    lo_export11: 'False'
+    lo_export12: 'False'
+    lo_export13: 'False'
+    lo_export14: 'False'
+    lo_export15: 'False'
+    lo_export16: 'False'
+    lo_export17: 'False'
+    lo_export18: 'False'
+    lo_export19: 'False'
+    lo_export2: 'False'
+    lo_export20: 'False'
+    lo_export21: 'False'
+    lo_export22: 'False'
+    lo_export23: 'False'
+    lo_export24: 'False'
+    lo_export25: 'False'
+    lo_export26: 'False'
+    lo_export27: 'False'
+    lo_export28: 'False'
+    lo_export29: 'False'
+    lo_export3: 'False'
+    lo_export30: 'False'
+    lo_export31: 'False'
+    lo_export4: 'False'
+    lo_export5: 'False'
+    lo_export6: 'False'
+    lo_export7: 'False'
+    lo_export8: 'False'
+    lo_export9: 'False'
+    lo_source0: internal
+    lo_source1: internal
+    lo_source10: internal
+    lo_source11: internal
+    lo_source12: internal
+    lo_source13: internal
+    lo_source14: internal
+    lo_source15: internal
+    lo_source16: internal
+    lo_source17: internal
+    lo_source18: internal
+    lo_source19: internal
+    lo_source2: internal
+    lo_source20: internal
+    lo_source21: internal
+    lo_source22: internal
+    lo_source23: internal
+    lo_source24: internal
+    lo_source25: internal
+    lo_source26: internal
+    lo_source27: internal
+    lo_source28: internal
+    lo_source29: internal
+    lo_source3: internal
+    lo_source30: internal
+    lo_source31: internal
+    lo_source4: internal
+    lo_source5: internal
+    lo_source6: internal
+    lo_source7: internal
+    lo_source8: internal
+    lo_source9: internal
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nchan: '1'
+    num_mboards: '1'
+    otw: ''
+    rx_agc0: Disabled
+    rx_agc1: Default
+    rx_agc10: Default
+    rx_agc11: Default
+    rx_agc12: Default
+    rx_agc13: Default
+    rx_agc14: Default
+    rx_agc15: Default
+    rx_agc16: Default
+    rx_agc17: Default
+    rx_agc18: Default
+    rx_agc19: Default
+    rx_agc2: Default
+    rx_agc20: Default
+    rx_agc21: Default
+    rx_agc22: Default
+    rx_agc23: Default
+    rx_agc24: Default
+    rx_agc25: Default
+    rx_agc26: Default
+    rx_agc27: Default
+    rx_agc28: Default
+    rx_agc29: Default
+    rx_agc3: Default
+    rx_agc30: Default
+    rx_agc31: Default
+    rx_agc4: Default
+    rx_agc5: Default
+    rx_agc6: Default
+    rx_agc7: Default
+    rx_agc8: Default
+    rx_agc9: Default
+    samp_rate: samp_rate
+    sd_spec0: ''
+    sd_spec1: ''
+    sd_spec2: ''
+    sd_spec3: ''
+    sd_spec4: ''
+    sd_spec5: ''
+    sd_spec6: ''
+    sd_spec7: ''
+    show_lo_controls: 'False'
+    start_time: '-1.0'
+    stream_args: ''
+    stream_chans: '[]'
+    sync: pc_clock
+    time_source0: ''
+    time_source1: ''
+    time_source2: ''
+    time_source3: ''
+    time_source4: ''
+    time_source5: ''
+    time_source6: ''
+    time_source7: ''
+    type: fc32
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 200.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_agc_xx_0, '0', digital_fll_band_edge_cc_0, '0']
+- [digital_constellation_decoder_cb_0, '0', digital_diff_decoder_bb_0, '0']
+- [digital_costas_loop_cc_0, '0', digital_constellation_decoder_cb_0, '0']
+- [digital_costas_loop_cc_0, '0', qtgui_const_sink_x_0, '0']
+- [digital_diff_decoder_bb_0, '0', digital_map_bb_0, '0']
+- [digital_fll_band_edge_cc_0, '0', digital_symbol_sync_xx_0, '0']
+- [digital_map_bb_0, '0', epy_block_1, '0']
+- [digital_symbol_sync_xx_0, '0', digital_costas_loop_cc_0, '0']
+- [uhd_usrp_source_0, '0', analog_agc_xx_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.12.0
