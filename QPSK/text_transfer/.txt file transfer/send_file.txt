@@ -1,0 +1,23 @@
+============================================================
+              USRP B210 QPSK FILE TRANSFER DEMO
+============================================================
+Hello! This is a complete text file transmitted over the air
+using GNU Radio and USRP B210 Software Defined Radios.
+
+Physical Layer Configuration:
+  - Carrier Frequency: 2.85 GHz (Offset Tuned to avoid LO leakage)
+  - Modulation: QPSK (Differential Encoding, SPS = 4)
+  - Filtering: Root Raised Cosine (Excess BW = 0.35)
+  - Sample Rate: 1.0 MSps (Symbol Rate = 250 kSps)
+
+Protocol & Error Detection:
+  - Synchronization: 32-symbol Barker-like Preamble
+  - PRBS Data Whitening: Synchronous Scrambler (Seed 42)
+  - Per-Packet Validation: 32-bit CRC (IEEE 802.3)
+  - File Integrity: Full-file 32-bit CRC Checksum
+  - Transmission Mode: Continuous Carousel Broadcast
+
+If you are reading this file, every single chunk was received
+over the wireless radio link and assembled with 100% data
+integrity!
+============================================================
